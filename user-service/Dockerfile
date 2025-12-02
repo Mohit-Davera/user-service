@@ -4,16 +4,16 @@ FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
 # 1. Copy build tools and config
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
+COPY user-service/mvnw .
+COPY user-service/.mvn .mvn
+COPY user-service/pom.xml .
 
 # 2. Download dependencies (Cached layer)
 # This should run BEFORE copying source code
 RUN ./mvnw dependency:go-offline
 
 # 3. Copy source code (Change strictly to 'src')
-COPY src src
+COPY user-service/src src
 
 # 4. Build the application
 RUN ./mvnw -DskipTests package
