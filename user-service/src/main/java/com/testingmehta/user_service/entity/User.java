@@ -29,8 +29,6 @@ public class User {
 
     private String gender;
 
-    @Column(name = "is_active", nullable = false, columnDefinition = "tinyint(1) default 1")
-
     private boolean isActive = true;
 
     private String address;
