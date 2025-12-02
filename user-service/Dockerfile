@@ -6,16 +6,19 @@ WORKDIR /app
 # Copy Maven wrapper + config first (for caching)
 COPY mvnw .
 COPY .mvn .mvn
-
-# Copy project files
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline
 
-# Copy source code
-COPY src src
+# Fix permissions & possible Windows line endings on mvnw
+RUN chmod +x mvnw && sed -i 's/\r$//' mvnw
+
+# Download dependencies (optional but good for cache)
+RUN ./mvnw dependency:go-offline -B
+
+# Copy the source code
+COPY src ./src
 
 # Build the application
-RUN ./mvnw -DskipTests package
+RUN ./mvnw -B -DskipTests package
 
 
 # ----------- RUNTIME STAGE -----------
@@ -26,7 +29,10 @@ WORKDIR /app
 # Copy built jar from previous stage
 COPY --from=build /app/target/*.jar app.jar
 
+# Railway will set PORT env, expose 8080 by convention
 EXPOSE 8080
 ENV PORT=8080
 
+# If your Spring Boot app uses server.port=${PORT:8080}
+# this will bind correctly on Railway
 ENTRYPOINT ["java", "-jar", "app.jar"]
