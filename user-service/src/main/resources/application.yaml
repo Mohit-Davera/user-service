@@ -6,7 +6,7 @@ spring:
   jpa:
     # Direct properties for JPA/Hibernate configuration
     hibernate:
-      ddl-auto: update # Controls schema generation (update, create, none, etc.)
+      ddl-auto: 'update' # Controls schema generation (update, create, none, etc.)
     show-sql: true       # Shows all executed SQL statements
     # A map for vendors specific properties
     properties:

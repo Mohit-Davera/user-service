@@ -2,6 +2,7 @@ package com.testingmehta.user_service.controller;
 
 
 import com.testingmehta.user_service.dto.UserDto;
+import com.testingmehta.user_service.dto.UserRequest;
 import com.testingmehta.user_service.entity.User;
 import com.testingmehta.user_service.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -27,7 +28,12 @@ public class UserController {
 
     // POST /users -> save user
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserRequest userRequest) {
+        User user = new User();
+        user.setName(userRequest.getName());
+        user.setGender(userRequest.getGender());
+        user.setAddress(userRequest.getAddress());
+        user.setEmail(userRequest.getEmail());
         User saved = userRepository.save(user);
         // return 201 Created with Location header
         return ResponseEntity

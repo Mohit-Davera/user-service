@@ -4,10 +4,7 @@ package com.testingmehta.user_service.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
@@ -32,7 +29,9 @@ public class User {
 
     private String gender;
 
-    private boolean isActive;
+    @Column(name = "is_active", nullable = false, columnDefinition = "tinyint(1) default 1")
+
+    private boolean isActive = true;
 
     private String address;
 }
