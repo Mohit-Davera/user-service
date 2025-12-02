@@ -6,6 +6,7 @@ import com.testingmehta.user_service.dto.UserRequest;
 import com.testingmehta.user_service.entity.User;
 import com.testingmehta.user_service.repository.UserRepository;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,9 +35,13 @@ public class UserController {
         user.setGender(userRequest.getGender());
         user.setAddress(userRequest.getAddress());
         user.setEmail(userRequest.getEmail());
-        User saved = userRepository.save(user);
-        // return 201 Created with Location header
-        return ResponseEntity.ok(saved);
+        try {
+            User saved = userRepository.save(user);
+            return ResponseEntity.ok(saved);
+        }
+        catch (DataIntegrityViolationException e){
+            return ResponseEntity.ok(user);
+        }
     }
 
     // GET /users/{id} -> get user by id
