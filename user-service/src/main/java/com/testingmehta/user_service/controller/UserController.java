@@ -36,9 +36,7 @@ public class UserController {
         user.setEmail(userRequest.getEmail());
         User saved = userRepository.save(user);
         // return 201 Created with Location header
-        return ResponseEntity
-                .created(URI.create("/users/" + saved.getId()))
-                .body(saved);
+        return ResponseEntity.ok(saved);
     }
 
     // GET /users/{id} -> get user by id
