@@ -4,11 +4,14 @@ FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
 # Copy Maven wrapper + config first (for caching)
-COPY user-service/mvnw .
-COPY user-service/.mvn .mvn
+COPY mvnw .
+COPY .mvn .mvn
 
-# Copy project files
-COPY user-service/pom.xml .
+# OLD: COPY user-service/pom.xml .
+COPY pom.xml .
+
+# OLD: COPY user-service/src src
+COPY src src
 RUN ./mvnw dependency:go-offline
 
 # Copy source code
