@@ -1,32 +1,29 @@
-# ----------- BUILD STAGE -----------
+# --------- BUILD STAGE ---------
 FROM eclipse-temurin:17-jdk AS build
 
 WORKDIR /app
 
-# Copy Maven wrapper + config first (for caching)
+# 1. Copy build tools and config
 COPY mvnw .
 COPY .mvn .mvn
-
-# OLD: COPY user-service/pom.xml .
 COPY pom.xml .
 
-# OLD: COPY user-service/src src
-COPY src src
+# 2. Download dependencies (Cached layer)
+# This should run BEFORE copying source code
 RUN ./mvnw dependency:go-offline
 
-# Copy source code
-COPY user-service/src src
+# 3. Copy source code (Change strictly to 'src')
+COPY src src
 
-# Build the application
+# 4. Build the application
 RUN ./mvnw -DskipTests package
 
-
-# ----------- RUNTIME STAGE -----------
+# --------- RUNTIME STAGE ---------
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-# Copy built jar from previous stage
+# Copy the built jar
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
